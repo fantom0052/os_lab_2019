@@ -23,6 +23,12 @@ void testRevertString(void) {
   CU_ASSERT_STRING_EQUAL_FATAL(str_with_even_chars_num, "dcba");
 }
 
+void testRevertStringEmpty(void) {
+    char str[] = "";                  
+    RevertString(str);                  
+    CU_ASSERT_STRING_EQUAL(str, "");   
+}
+
 int main() {
   CU_pSuite pSuite = NULL;
 
@@ -37,6 +43,11 @@ int main() {
   }
 
   /* add the tests to the suite */
+  if ((NULL == CU_add_test(pSuite, "test of RevertString function", testRevertString)) ||
+    (NULL == CU_add_test(pSuite, "test of empty string", testRevertStringEmpty))) {
+    CU_cleanup_registry();
+    return CU_get_error();
+}
   /* NOTE - ORDER IS IMPORTANT - MUST TEST fread() AFTER fprintf() */
   if ((NULL == CU_add_test(pSuite, "test of RevertString function",
                            testRevertString))) {
