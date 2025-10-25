@@ -1,0 +1,42 @@
+# Компилируем объектный файл
+gcc -c revert_string.c -o revert_string.o
+
+# Создаем статическую библиотеку
+ar rcs librevertstring.a revert_string.o
+
+Разберём флаги:
+    r - Replace/insert: добавляет или обновляет файлы в архиве
+    c - Create: создаёт архив, если он не существует
+    s - Symbol table: создаёт индекс символов (важно для линковки)
+
+Компоненты команды:
+
+    ar - утилита для работы с архивами
+    librevertstring.a - имя создаваемой статической библиотеки
+        префикс lib - стандартное соглашение
+        суффикс .a - означает статическую библиотеку (archive)
+    revert_string.o - объектный файл для включения в библиотеку
+
+
+Пояснение использованных опций
+
+    -c: компиляция без линковки
+    -fPIC: создание позиционно-независимого кода
+    -shared: создание разделяемой библиотеки
+    -L.: добавление текущей директории в путь поиска библиотек
+    -l: указание имени библиотеки для линковки
+
+# Компилируем с поддержкой PIC
+gcc -c -fPIC revert_string.c -o revert_string_shared.o
+
+# Создаем динамическую библиотеку
+gcc -shared -o librevertstring.so revert_string_shared.o
+
+# Компилируем с линковкой статической библиотеки
+gcc main.c -L. -l revertstring -o revert_string_static
+
+# Компилируем с линковкой динамической библиотеки
+gcc main.c -L. -l revertstring -o revert_string_dynamic
+
+# Добавляем текущую директорию в LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:.
